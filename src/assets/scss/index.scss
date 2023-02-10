@@ -1,0 +1,14 @@
+:root {
+    --header-height: 5rem;
+    --navigation-width: 12rem;
+}
+
+body {
+    margin: 0;
+}
+
+main {
+    margin-top: var(--header-height);
+    margin-left: var(--navigation-width);
+    // width: calc(100% - var(--navigation-width));
+}

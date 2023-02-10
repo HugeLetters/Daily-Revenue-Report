@@ -1,0 +1,15 @@
+.active {
+    background-color: goldenrod;
+}
+
+#navigation {
+    position: fixed;
+    left: 0;
+    top: var(--header-height);
+    height: calc(100% - var(--header-height));
+    width: var(--navigation-width);
+    background-color: #3ab31cc9;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overflow-wrap: break-word;
+}

@@ -1,0 +1,18 @@
+#header {
+    position: fixed;
+    height: var(--header-height);
+    width: 100%;
+    background-color: #225eace2;
+    top: 0;
+
+    display: grid;
+    grid-template-columns: repeat(3, min-content);
+    grid-auto-rows: 100%;
+    justify-content: flex-start;
+    gap: 5%;
+
+    img {
+        height: 100%;
+    }
+
+}

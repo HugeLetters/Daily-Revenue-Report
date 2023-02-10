@@ -5,9 +5,9 @@
   "type": "module",
   "homepage": ".",
   "scripts": {
-    "dev": "node server -dev",
+    "dev": "nodemon -w server server/server.js -dev",
     "build": "vite build",
-    "preview": "node server"
+    "preview": "node server/server.js"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.2",
@@ -35,6 +35,8 @@
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.3.3",
+    "nodemon": "^2.0.20",
     "vite": "^4.1.0",
     "vitest": "^0.28.4"
   }
