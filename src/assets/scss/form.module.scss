@@ -1,0 +1,25 @@
+.fieldsetGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 15%);
+    gap: 0.5rem;
+
+    &>label {
+        white-space: nowrap;
+        text-align: center;
+        width: 80%;
+
+        &>input {
+            margin: 0.3rem auto 0;
+            display: block;
+            width: 100%;
+        }
+    }
+}
+
+.textHighlight {
+    color: red
+}
+
+input:invalid {
+    background-color: red;
+}

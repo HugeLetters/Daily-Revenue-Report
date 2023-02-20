@@ -1,21 +1,35 @@
-import { useState } from "react";
+import "flatpickr/dist/themes/dark.css";
+import Flatpickr from "react-flatpickr";
+import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import style from "../assets/css/header.module.css";
+import { useSelector } from "../hooks/reduxHooks";
+import { set } from "../store/dateSlice";
 
-function getLogo(logo) {
-  return new URL(
-    `../assets/images/logo-${logo ? "color" : "gold"}.png`,
-    import.meta.url
-  );
-}
-
-export default function PageHeader() {
-  const [logo, setLogo] = useState(true);
-
+export default function Header() {
+  const dispatch = useDispatch();
+  const date = useSelector(state => state.date);
+  function handleChange(_, e) {
+    dispatch(set(e));
+  }
   return (
     <header id={style.header}>
-      <h1>HEADER</h1>
-      <button onClick={() => setLogo(logo => !logo)}>TOGGLE LOGO</button>
-      <img src={getLogo(logo)} />
+      <img src={`/logo/color.png`} />
+      <div>{date.value}</div>
+      <Flatpickr
+        required
+        placeholder="Select Date"
+        value={date.value}
+        onClose={handleChange}
+        options={{
+          dateFormat: date.format,
+          allowInput: true,
+        }}
+        form="currentForm"
+      />
+      <Link to="profile">Profile</Link>
+      <Link to="login">Login</Link>
+      <Link to="register">Register</Link>
     </header>
   );
 }

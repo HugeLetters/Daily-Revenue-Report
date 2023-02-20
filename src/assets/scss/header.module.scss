@@ -5,11 +5,8 @@
     background-color: #225eace2;
     top: 0;
 
-    display: grid;
-    grid-template-columns: repeat(3, min-content);
-    grid-auto-rows: 100%;
-    justify-content: flex-start;
-    gap: 5%;
+    display: flex;
+    justify-content: space-evenly;
 
     img {
         height: 100%;

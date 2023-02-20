@@ -8,7 +8,10 @@ body {
 }
 
 main {
+    // position: fixed;
     margin-top: var(--header-height);
     margin-left: var(--navigation-width);
     // width: calc(100% - var(--navigation-width));
+    width: calc(100% - var(--navigation-width));
+    // height: calc(100% - var(--header-height));
 }

@@ -5,30 +5,29 @@ export default function Navigation() {
   return (
     <nav id={style.navigation}>
       <ul>
+        <NavSection section={["drr", "Daily Revenue Report"]} />
         <NavSection
-          section="Home"
-          links={[[""]]}
-        />
-        <NavSection
-          section="Data Input"
+          section={["day", "Daily Input"]}
           links={[
             ["rooms", "Rooms Input"],
+            ["foodservice", "F&B Input"],
             ["postings", "Postings Input"],
-            ["f&b", "F&B Input"],
-            ["finance", "Financial Input"],
             ["reports", "Upload Report"],
           ]}
         />
         <NavSection
-          section="Daily Revenue Report"
-          links={[["drr"]]}
+          section={["financial", "Financial Input"]}
+          links={[
+            ["rooms", "Rooms Input"],
+            ["foodservice", "F&B Input"],
+            ["rolling", "Rolling Forecast Input"],
+          ]}
         />
         <NavSection
-          section="Settings"
+          section={["config", "Configuration"]}
           links={[
-            ["profile", "Profile Settings"],
-            ["hotel", "Hotel Settings"],
-            ["admin", "Admin Settings"],
+            ["hotel", "Hotel Panel"],
+            ["admin", "Admin Panel"],
           ]}
         />
       </ul>
@@ -39,15 +38,15 @@ export default function Navigation() {
 function NavSection({ section, links }) {
   return (
     <li>
-      {links.length === 1 ? (
+      {!links ? (
         <CustomNavLink
-          to={links[0][0]}
-          label={section}
+          to={section[0]}
+          label={section[1]}
         />
       ) : (
         <>
-          {section}
-          <NavSectionLinks links={links} />
+          {section[1]}
+          <NavSectionLinks links={links.map(link => [`${section[0]}/${link[0]}`, link[1]])} />
         </>
       )}
     </li>

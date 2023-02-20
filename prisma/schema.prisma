@@ -1,0 +1,169 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model DailyData {
+  date                   DateTime                 @id
+  guestLedger            Float?                   @map("guest-ledger")
+  ARLedger               Float?                   @map("AR-ledger")
+  depositLedger          Float?                   @map("deposit-ledger")
+  packageLedger          Float?                   @map("package-ledger")
+  DailyMarketSegmentData DailyMarketSegmentData[]
+  totalRevenue           Float?                   @map("total-revenue")
+  compHouseRooms         Int?                     @map("comp-house-rooms")
+  noShowRooms            Int?                     @map("no-show-rooms")
+  OOORooms               Int?                     @map("ooo-rooms")
+  arrivalRooms           Int?                     @map("arrival-rooms")
+  departureRooms         Int?                     @map("departure-rooms")
+  guestInHouse           Int?                     @map("guest-in-house")
+  cancellationsToday     Int?                     @map("cancellations-today")
+  earlyDepartureRooms    Int?                     @map("early-departure-rooms")
+  extendedRooms          Int?                     @map("extended-rooms")
+  walkInRooms            Int?                     @map("walk-in-rooms")
+  tomorrowArrivalRooms   Int?                     @map("tomorrow-arrival-rooms")
+  tomorrowDepartureRooms Int?                     @map("tomorrow-departure-rooms")
+  enrollments            Int?
+  nextMonthsOutlookRooms Int[]                    @map("next-months-outlook-rooms")
+
+  @@map("daily-data")
+}
+
+model DailyMarketSegmentData {
+  date               DateTime
+  DailyData          DailyData     @relation(fields: [date], references: [date])
+  segment            String        @db.Char(1)
+  MarketSegment      MarketSegment @relation(fields: [segment], references: [code])
+  pastDayRooms       Int           @map("past-day-rooms")
+  pastDayRevenue     Float         @map("past-day-revenue")
+  restOfMonthRooms   Int           @map("rest-of-month-rooms")
+  restOfMonthRevenue Float         @map("rest-of-month-revenue")
+
+  @@id(name: "id", fields: [date, segment])
+  @@map("daily-market-segment-data")
+}
+
+model FoodserviceOutlet {
+  subgroup PostingSubgroup @id
+  group    PostingGroup    @default(FOODSERVICE)
+  type     PostingType     @relation(fields: [group, subgroup], references: [group, subgroup])
+  name     String
+
+  @@map("foodservice-outlets")
+}
+
+model MarketSegment {
+  code                   String                   @id @db.Char(1)
+  description            String
+  DailyMarketSegmentData DailyMarketSegmentData[]
+
+  @@map("market-segments")
+}
+
+model PostingType {
+  group             PostingGroup        @default(OTHER)
+  subgroup          PostingSubgroup     @default(OTHER)
+  PostingCode       PostingCode[]
+  FoodserviceOutlet FoodserviceOutlet[]
+
+  @@id(name: "id", fields: [group, subgroup])
+  @@map("posting-types")
+}
+
+model FBpostingType {
+  group       PostingGroup
+  fbgroup     FBpostingGroup
+  name        String
+  PostingCode PostingCode[]
+
+  @@id(name: "id", fields: [group, fbgroup])
+  @@map("fb-posting-types")
+}
+
+model PostingCode {
+  code           Int             @id
+  name           String
+  group          PostingGroup    @default(OTHER)
+  subgroup       PostingSubgroup @default(OTHER)
+  PostingType    PostingType     @relation(fields: [group, subgroup], references: [group, subgroup])
+  FBgroup        FBpostingGroup? @map("fb-group")
+  FBpostingType  FBpostingType?  @relation(fields: [group, FBgroup], references: [group, fbgroup])
+  tax            Int?
+  taxCode        Int?            @map("tax-code")
+  relTaxCode     PostingCode?    @relation("TaxCodes", fields: [taxCode], references: [code])
+  relPostTaxCode PostingCode[]   @relation("TaxCodes")
+  adjCode        Int?            @map("adj-code")
+  relAdjCode     PostingCode?    @relation("AdjCodes", fields: [adjCode], references: [code])
+  relPostAdjCode PostingCode[]   @relation("AdjCodes")
+
+  @@index(fields: [code, group, subgroup, FBgroup])
+  @@map("posting-codes")
+}
+
+enum PostingGroup {
+  ROOM
+  FOODSERVICE
+  MISC
+  PAYMENT
+  PACKAGE
+  TAX
+  ZZZ
+  OTHER
+
+  @@map("posting-groups")
+}
+
+enum PostingSubgroup {
+  BANQUETING
+  CASH
+  CCARD
+  DB
+  INTERNAL
+  INTPAY
+  MISC1
+  MISC2
+  MISC3
+  MISC5
+  MISC6
+  OTHER
+  PACKAGE
+  PAIDOUT
+  NICCOLO
+  MAFFEO
+  ROOM_SERVICE
+  MINI_BAR
+  ROOM
+  TAX1
+  TAX2
+  TAX3
+  TAX4
+  TAX5
+  TAX6
+  TAX7
+  TAX8
+  TAX9
+  TAX10
+  TAX11
+  WRITEOFF
+  ZZZ
+
+  @@map("posting-subgroups")
+}
+
+enum FBpostingGroup {
+  BREAKFAST_WALKIN
+  BREAKFAST_INCL
+  FOOD
+  BEVERAGE
+  GRATUITIES
+  OTHER
+
+  @@map("fb-posting-groups")
+}

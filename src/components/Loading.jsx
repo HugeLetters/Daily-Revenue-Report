@@ -1,10 +1,11 @@
-export default function Loading() {
+import styles from "../assets/css/loading.module.css";
+
+export default function Loading({ text = "Loading..." }) {
   return (
-    <>
-      <p>LOADING...</p>
-      <img
-        src={new URL("../assets/images/logo-min-gold.png", import.meta.url)}
-      />
-    </>
+    <div className={styles.loading}>
+      <img src="/logo/gold-min.png" />
+      {text}
+      <img src="/logo/gold-min.png" />
+    </div>
   );
 }
