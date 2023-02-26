@@ -1,8 +1,7 @@
-import Error from "../../components/Error";
+import FetchingElement from "../../components/FetchingElement";
 import Fieldset from "../../components/Fieldset";
 import FieldsetTable from "../../components/FieldsetTable";
 import Form from "../../components/Form";
-import Loading from "../../components/Loading";
 import useFetchData from "../../hooks/useFetchData";
 import { NUMBER_REGEX } from "../../utils/utils";
 
@@ -16,12 +15,6 @@ export default function RollingForecast() {
     key: ["foodservice postings"],
   });
 
-  if (outlets.isLoading) return <Loading text="F&B Outlets are being loaded from the server" />;
-  if (outlets.isError) return <Error errorText={outlets.error} />;
-  if (headers.isLoading)
-    return <Loading text="F&B Posting types are being loaded from the server" />;
-  if (headers.isError) return <Error errorText={headers.error} />;
-
   return (
     <div>
       <h1>Rolling Forecast Input</h1>
@@ -34,14 +27,21 @@ export default function RollingForecast() {
             { label: "Other Revenue", code: "OTHER_REVENUE", pattern: NUMBER_REGEX.FLOAT },
           ]}
         />
-        <FieldsetTable
-          legend={"F&B"}
-          headers={[
-            ...headers.data.map(x => ({ ...x, pattern: NUMBER_REGEX.FLOAT })),
-            { label: "Covers", pattern: NUMBER_REGEX.INT },
-          ]}
-          rows={outlets.data}
-        />
+        <FetchingElement
+          label="F&B outlets & categories"
+          queries={[outlets, headers]}
+        >
+          <FieldsetTable
+            legend={"F&B"}
+            headers={
+              headers.isSuccess && [
+                ...headers.data.map(x => ({ ...x, pattern: NUMBER_REGEX.FLOAT })),
+                { label: "Covers", pattern: NUMBER_REGEX.INT },
+              ]
+            }
+            rows={outlets.data}
+          />
+        </FetchingElement>
       </Form>
     </div>
   );

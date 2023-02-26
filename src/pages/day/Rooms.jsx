@@ -1,5 +1,3 @@
-import Error from "../../components/Error";
-import Loading from "../../components/Loading";
 import useFetchData from "../../hooks/useFetchData";
 import useNextNMonths from "../../hooks/useNextNMonths";
 import Fieldset from "../../components/Fieldset";
@@ -9,18 +7,37 @@ import { useSelector } from "../../hooks/reduxHooks";
 import flatpickr from "flatpickr";
 import useNextNDays from "../../hooks/useNextNDays";
 import { NUMBER_REGEX } from "../../utils/utils";
+import FetchingElement from "../../components/FetchingElement";
 
 export default function Rooms() {
   const segments = useFetchData({
     endpoint: "/api/hotel/market-segments",
     key: ["market segments"],
   });
+  const monthsOutlookCount = useFetchData({
+    endpoint: "/api/hotel/config",
+    key: ["outlook months"],
+    params: { name: "outlook_months" },
+  });
+  const daysOutlookCount = useFetchData({
+    endpoint: "/api/hotel/config",
+    key: ["outlook days"],
+    params: { name: "outlook_days" },
+  });
   const date = useSelector(state => state.date);
   const today = flatpickr.parseDate(date.value, date.format) ?? new Date();
   const todayMonth = today.getMonth();
   const tomorrowMonth = today.fp_incr(1).getMonth();
-  const outlookMonths = useNextNMonths(todayMonth !== tomorrowMonth ? 5 : 4);
-  const forecastDates = useNextNDays(32);
+  const outlookMonths = useNextNMonths(
+    monthsOutlookCount.isSuccess
+      ? todayMonth !== tomorrowMonth
+        ? monthsOutlookCount.data.value + 1
+        : monthsOutlookCount.data.value
+      : 1
+  );
+  const outlookDays = useNextNDays(
+    daysOutlookCount.isSuccess ? daysOutlookCount.data.value + 1 : 1
+  );
 
   return (
     <div>
@@ -33,13 +50,18 @@ export default function Rooms() {
             pattern: NUMBER_REGEX.FLOAT,
           }))}
         />
-        {segments.isLoading && <Loading text="Market Segments are being loaded from the server" />}
-        {segments.isError && <Error errorText={segments.error} />}
-        {segments.isSuccess && (
+        <FetchingElement
+          queries={[segments]}
+          label="Market Segments data"
+        >
           <FieldsetTable
             legend="Market Segmentation"
             headers={[
-              { label: "Past Day Revenue", code: "PAST_DAY_REVENUE", pattern: NUMBER_REGEX.FLOAT },
+              {
+                label: "Past Day Revenue",
+                code: "PAST_DAY_REVENUE",
+                pattern: NUMBER_REGEX.FLOAT,
+              },
               { label: "Past Day Rooms", code: "PAST_DAY_ROOMS", pattern: NUMBER_REGEX.INT },
               {
                 label: "Rest of Month Revenue",
@@ -56,7 +78,7 @@ export default function Rooms() {
             flipName
             showRowCodes
           />
-        )}
+        </FetchingElement>
         <Fieldset
           legend="Manager Flash"
           fields={[
@@ -96,25 +118,35 @@ export default function Rooms() {
             { label: "Enrollments", code: "ENROLLMENTS", pattern: NUMBER_REGEX.INT },
           ]}
         />
-        <FieldsetTable
-          legend="Outlook"
-          headers={[
-            { label: "Revenue", pattern: NUMBER_REGEX.FLOAT },
-            { label: "Rooms", pattern: NUMBER_REGEX.INT },
-          ]}
-          rows={outlookMonths.map((month, i) => ({ label: month, code: i }))}
-          flipName
-          prefix="Outlook"
-        />
-        <Fieldset
-          legend="Expected Occupancy"
-          prefix="Expected"
-          fields={forecastDates.map((date, i) => ({
-            label: date,
-            pattern: NUMBER_REGEX.INT,
-            code: i,
-          }))}
-        />
+        <FetchingElement
+          label="Outlook Months"
+          queries={[monthsOutlookCount]}
+        >
+          <FieldsetTable
+            legend="Outlook"
+            headers={[
+              { label: "Revenue", pattern: NUMBER_REGEX.FLOAT },
+              { label: "Rooms", pattern: NUMBER_REGEX.INT },
+            ]}
+            rows={outlookMonths.map((month, i) => ({ label: month, code: i }))}
+            flipName
+            prefix="Outlook"
+          />
+        </FetchingElement>
+        <FetchingElement
+          label="Outlook days"
+          queries={[daysOutlookCount]}
+        >
+          <Fieldset
+            legend="On the Books Occupancy"
+            prefix="OTB"
+            fields={outlookDays.map((date, i) => ({
+              label: date,
+              pattern: NUMBER_REGEX.INT,
+              code: i,
+            }))}
+          />
+        </FetchingElement>
       </Form>
     </div>
   );

@@ -57,7 +57,7 @@ export default function Postings() {
                 </td>
                 <td>
                   <input
-                    name={code}
+                    name={code || undefined}
                     aria-label="posting amount"
                     value={value}
                     onChange={({ currentTarget: { value } }) => handleChange(value, i, true)}

@@ -15,20 +15,10 @@ export default function useSubmitData({ endpoint, method = "POST" }) {
         if (sendAll) break;
         if (v) body.append(k, v);
       }
-      return fetch(`${endpoint}?${new URLSearchParams({ date })}`, {
-        method,
-        body,
-      })
-        .then(x => {
-          if (!x.ok) {
-            throw x.statusText;
-          }
-          return x.json();
-        })
-        .then(({ ok, data, error }) => {
-          if (!ok) throw error;
-          return data;
-        });
+      return fetch(`${endpoint}?${new URLSearchParams({ date })}`, { method, body }).then(x => {
+        if (!x.ok) throw x.statusText;
+        return x.text();
+      });
     },
   });
 }

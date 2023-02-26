@@ -6,8 +6,11 @@
   "homepage": ".",
   "scripts": {
     "dev": "nodemon ./server/server.js",
+    "prisma:studio": "prisma db push&& prisma studio",
+    "cypress:open": "cypress open",
     "build": "vite build",
-    "preview": "set NODE_ENV=production&& node server/server.js"
+    "preview": "set NODE_ENV=production&& node server/server.js",
+    "db:data-init": "node database/init.js"
   },
   "dependencies": {
     "@prisma/client": "^4.9.0",
@@ -21,7 +24,7 @@
     "flatpickr": "^4.6.13",
     "immer": "^9.0.19",
     "multer": "^1.4.5-lts.1",
-    "prisma": "^4.9.0",
+    "prisma": "^4.10.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-flatpickr": "^3.10.13",
@@ -39,8 +42,10 @@
     "@mermaid-js/mermaid-cli": "^9.3.0",
     "@types/react-redux": "^7.1.25",
     "@vitejs/plugin-react-swc": "^3.0.0",
+    "cypress": "^12.7.0",
     "eslint": "^8.33.0",
     "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-react": "^7.32.2",

@@ -1,24 +1,14 @@
-import { lazy, Suspense } from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { lazy } from "react";
 import { Provider } from "react-redux";
-import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import store from "../store/store";
-import Navigation from "./Navigation";
-import Header from "./Header";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Error from "../components/Error";
+import FourZeroFour from "../pages/404";
 import Login from "../pages/user/Login";
 import Register from "../pages/user/Register";
-import Error from "../components/Error";
-import Loading from "../components/Loading";
-import FourZeroFour from "../pages/404";
+import { queryClient } from "../router/tanstack-query";
+import store from "../store/store";
 import { indexRedirect } from "../utils/utils";
-
-const DailyRevenueReport = lazy(() => import("../pages/DailyRevenueReport"));
-const Day = lazy(() => import("../pages/Day"));
-const DailyReportsInput = lazy(() => import("../pages/day/Reports"));
-const Financial = lazy(() => import("../pages/Financial"));
-const Profile = lazy(() => import("../pages/user/Profile"));
-const HotelPanel = lazy(() => import("../pages/config/Hotel"));
-const AdminPanel = lazy(() => import("../pages/config/Admin"));
 
 export default function App() {
   return (
@@ -30,7 +20,21 @@ export default function App() {
   );
 }
 
-function Layout() {
+const DailyRevenueReport = lazy(() => import("../pages/DailyRevenueReport"));
+const Day = lazy(() => import("../pages/Day"));
+const DailyReportsInput = lazy(() => import("../pages/day/Reports"));
+const Financial = lazy(() => import("../pages/Financial"));
+const Profile = lazy(() => import("../pages/user/Profile"));
+const HotelPanel = lazy(() => import("../pages/config/Hotel"));
+const AdminPanel = lazy(() => import("../pages/config/Admin"));
+
+import { Suspense } from "react";
+import { Outlet } from "react-router-dom";
+import Loading from "../components/Loading";
+import Header from "./Header";
+import Navigation from "./Navigation";
+
+export function Layout() {
   return (
     <div id="app">
       <Header />
@@ -89,5 +93,3 @@ const router = createBrowserRouter([
     ],
   },
 ]);
-
-const queryClient = new QueryClient();

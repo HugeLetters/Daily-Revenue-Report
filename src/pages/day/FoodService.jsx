@@ -1,9 +1,9 @@
 import produce from "immer";
 import { useReducer } from "react";
-import Error from "../../components/Error";
+import FetchingElement from "../../components/FetchingElement";
+import Fieldset from "../../components/Fieldset";
 import FieldsetTable from "../../components/FieldsetTable";
 import Form from "../../components/Form";
-import Loading from "../../components/Loading";
 import useFetchData from "../../hooks/useFetchData";
 import { NUMBER_REGEX } from "../../utils/utils";
 
@@ -16,7 +16,7 @@ const eventsHeaders = [
   { label: "Status", code: "STATUS" },
 ];
 
-export default function FoodService() {
+export default function Foodservice() {
   const outlets = useFetchData({
     endpoint: "/api/hotel/foodservice-outlets",
     key: ["foodservice outlets"],
@@ -25,6 +25,12 @@ export default function FoodService() {
     endpoint: "/api/hotel/foodservice-postings",
     key: ["foodservice postings"],
   });
+  const eventsLimit = useFetchData({
+    endpoint: "/api/hotel/config",
+    key: ["events limit"],
+    params: { name: "events_limit" },
+  });
+
   const [events, dispatch] = useReducer(
     produce((draft, { reset, value, row, col }) => {
       if (reset) return [Array(6).fill("")];
@@ -47,12 +53,6 @@ export default function FoodService() {
     dispatch({ reset: true });
   }
 
-  if (outlets.isLoading) return <Loading text="F&B Outlets are being loaded from the server" />;
-  if (outlets.isError) return <Error errorText={outlets.error} />;
-  if (headers.isLoading)
-    return <Loading text="F&B Posting types are being loaded from the server" />;
-  if (headers.isError) return <Error errorText={headers.error} />;
-
   return (
     <div>
       <h1>Daily F&B Input</h1>
@@ -60,13 +60,28 @@ export default function FoodService() {
         endpoint="/api/input/day"
         onReset={handleReset}
       >
-        <FieldsetTable
-          legend={"Revenue & Covers - Simphony"}
-          headers={[
-            ...headers.data.map(x => ({ ...x, pattern: NUMBER_REGEX.FLOAT })),
-            { label: "Covers", code: "COVERS", pattern: NUMBER_REGEX.INT },
+        <FetchingElement
+          label="F&B outlets & categories"
+          queries={[outlets, headers]}
+        >
+          <FieldsetTable
+            legend="Revenue & Covers - Simphony"
+            headers={
+              headers.isSuccess && [
+                ...headers.data.map(x => ({ ...x, pattern: NUMBER_REGEX.FLOAT })),
+                { label: "Covers", code: "COVERS", pattern: NUMBER_REGEX.INT },
+              ]
+            }
+            rows={outlets.data}
+          />
+        </FetchingElement>
+        <Fieldset
+          legend="Difference correction"
+          fields={[
+            { label: "Opera", pattern: NUMBER_REGEX.FLOAT },
+            { label: "Simphony", pattern: NUMBER_REGEX.FLOAT },
           ]}
-          rows={outlets.data}
+          prefix="FOODSERVICE_CORRECTION"
         />
         <fieldset>
           <legend>Groups & Events</legend>
@@ -86,7 +101,7 @@ export default function FoodService() {
                       <input
                         type={type}
                         pattern={pattern}
-                        name={i !== events.length - 1 && `EVENTS ${code} ${i}`}
+                        name={i !== events.length - 1 ? `EVENTS ${code} ${i}` : undefined}
                         required={i !== events.length - 1}
                         aria-label={label}
                         onChange={({ currentTarget: { value } }) => handleChange(value, i, col)}
@@ -98,6 +113,9 @@ export default function FoodService() {
               ))}
             </tbody>
           </table>
+          {eventsLimit.isSuccess && events.length - 1 > eventsLimit.data.value && (
+            <section>Only the first {eventsLimit.data.value} events are accepted</section>
+          )}
         </fieldset>
       </Form>
     </div>

@@ -1,36 +1,45 @@
 import express from "express";
 import {
-  getFoodServiceOutlets,
-  getFoodServicePostings,
+  getFoodserviceOutlets,
+  getFoodservicePostings,
+  getHotelConfig,
   getMarketSegments,
 } from "../../database/queries.js";
 const router = express.Router();
 
 router.get("/foodservice-outlets", (req, res) => {
   console.log("F&B Outlets requested");
-  console.log(req.query);
-  getFoodServiceOutlets()
+  getFoodserviceOutlets()
     .then(data => data.map(({ subgroup: code, name: label }) => ({ label, code })))
-    .then(data => res.send({ ok: true, data }))
-    .catch(error => res.send({ ok: false, error }));
+    .then(data => res.status(200).send(data))
+    .catch(error => res.status(500).send(error));
 });
 
 router.get("/foodservice-postings", (req, res) => {
   console.log("F&B Postings requested");
-  console.log(req.query);
-  getFoodServicePostings()
+  getFoodservicePostings()
     .then(data => data.map(({ fbgroup: code, name: label }) => ({ code, label })))
-    .then(data => res.send({ ok: true, data }))
-    .catch(error => res.send({ ok: false, error }));
+    .then(data => res.status(200).send(data))
+    .catch(error => res.status(500).send(error));
 });
 
 router.get("/market-segments", (req, res) => {
   console.log("Market Segments requested");
-  console.log(req.query);
   getMarketSegments()
     .then(data => data.map(({ code, description: label }) => ({ code, label })))
-    .then(data => res.send({ ok: true, data }))
-    .catch(error => res.send({ ok: false, error }));
+    .then(data => res.status(200).send(data))
+    .catch(error => res.status(500).send(error));
 });
 
+router.get("/config", (req, res) => {
+  const queryMap = new Map([
+    ["outlook_months", "Months Outlook Count"],
+    ["outlook_days", "Days Outlook Count"],
+    ["events_limit", "Events Daily Limit"],
+  ]);
+  console.log("Hotel config requested");
+  getHotelConfig(queryMap.get(req.query.name))
+    .then(data => res.status(200).send(data))
+    .catch(error => res.status(500).send(error));
+});
 export default router;

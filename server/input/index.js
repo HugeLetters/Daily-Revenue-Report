@@ -6,7 +6,7 @@ router.put("/financial", (req, res) => {
   console.log(data);
   console.log(Object.keys(data).length);
   console.log(req.query);
-  res.send({ ok: true, data: "Financial PUT request received!" });
+  res.status(200).send("Financial PUT request received!");
 });
 
 router.put("/day", (req, res) => {
@@ -14,7 +14,7 @@ router.put("/day", (req, res) => {
   console.log(data);
   console.log(Object.keys(data).length);
   console.log(req.query);
-  res.send({ ok: true, data: "Daily PUT request received!" });
+  res.status(200).send("Daily PUT request received!");
 });
 
 router.put("/rolling", (req, res) => {
@@ -22,7 +22,7 @@ router.put("/rolling", (req, res) => {
   console.log(data);
   console.log(Object.keys(data).length);
   console.log(req.query);
-  res.send({ ok: true, data: "Rolling Forecast PUT request received!" });
+  res.status(200).send("Rolling Forecast PUT request received!");
 });
 
 export default router;

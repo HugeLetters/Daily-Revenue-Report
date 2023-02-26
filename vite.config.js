@@ -7,5 +7,7 @@ export default defineConfig({
   css: {
     devSourcemap: true,
   },
-  server: { host: false },
+  server: {
+    host: true,
+  },
 });
