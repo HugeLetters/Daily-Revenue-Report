@@ -57,7 +57,7 @@ export default function Foodservice() {
     <div>
       <h1>Daily F&B Input</h1>
       <Form
-        endpoint="/api/input/day"
+        endpoint="/api/input/day/foodservice"
         onReset={handleReset}
       >
         <FetchingElement
@@ -78,8 +78,8 @@ export default function Foodservice() {
         <Fieldset
           legend="Difference correction"
           fields={[
-            { label: "Opera", pattern: NUMBER_REGEX.FLOAT },
-            { label: "Simphony", pattern: NUMBER_REGEX.FLOAT },
+            { label: "Opera", code: "OPERA", pattern: NUMBER_REGEX.FLOAT },
+            { label: "Simphony", code: "SIMPHONY", pattern: NUMBER_REGEX.FLOAT },
           ]}
           prefix="FOODSERVICE_CORRECTION"
         />
@@ -101,7 +101,7 @@ export default function Foodservice() {
                       <input
                         type={type}
                         pattern={pattern}
-                        name={i !== events.length - 1 ? `EVENTS ${code} ${i}` : undefined}
+                        name={i !== events.length - 1 ? `EVENTS_${code} ${i}` : undefined}
                         required={i !== events.length - 1}
                         aria-label={label}
                         onChange={({ currentTarget: { value } }) => handleChange(value, i, col)}

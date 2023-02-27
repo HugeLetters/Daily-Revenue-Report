@@ -4,7 +4,7 @@ import { useSelector } from "./reduxHooks";
 export default function useFetchData({ endpoint, key, method = "GET", enabled = true, params }) {
   if (!{ GET: true, HEAD: true }[method])
     throw "Please use another webhook for POST queries\nThis webhook is for GET type of requests";
-  const date = useSelector(state => state.date.value);
+  const date = useSelector(state => state.date);
   return useQuery({
     queryKey: key,
     queryFn: () => {

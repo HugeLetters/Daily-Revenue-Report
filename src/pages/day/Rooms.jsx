@@ -4,10 +4,10 @@ import Fieldset from "../../components/Fieldset";
 import FieldsetTable from "../../components/FieldsetTable";
 import Form from "../../components/Form";
 import { useSelector } from "../../hooks/reduxHooks";
-import flatpickr from "flatpickr";
 import useNextNDays from "../../hooks/useNextNDays";
 import { NUMBER_REGEX } from "../../utils/utils";
 import FetchingElement from "../../components/FetchingElement";
+import moment from "moment";
 
 export default function Rooms() {
   const segments = useFetchData({
@@ -24,13 +24,13 @@ export default function Rooms() {
     key: ["outlook days"],
     params: { name: "outlook_days" },
   });
+
   const date = useSelector(state => state.date);
-  const today = flatpickr.parseDate(date.value, date.format) ?? new Date();
-  const todayMonth = today.getMonth();
-  const tomorrowMonth = today.fp_incr(1).getMonth();
+  const isEndOfMonth = moment(date).month() !== moment(date).add(1, "d").month();
+
   const outlookMonths = useNextNMonths(
     monthsOutlookCount.isSuccess
-      ? todayMonth !== tomorrowMonth
+      ? isEndOfMonth
         ? monthsOutlookCount.data.value + 1
         : monthsOutlookCount.data.value
       : 1
@@ -42,11 +42,12 @@ export default function Rooms() {
   return (
     <div>
       <h1>Daily Rooms Input</h1>
-      <Form endpoint="/api/input/day">
+      <Form endpoint="/api/input/day/rooms">
         <Fieldset
           legend="Trial Balance"
           fields={["Guest", "AR", "Deposit", "Package"].map(field => ({
             label: field + " Ledger",
+            code: field.toUpperCase() + "_LEDGER",
             pattern: NUMBER_REGEX.FLOAT,
           }))}
         />
@@ -125,12 +126,12 @@ export default function Rooms() {
           <FieldsetTable
             legend="Outlook"
             headers={[
-              { label: "Revenue", pattern: NUMBER_REGEX.FLOAT },
-              { label: "Rooms", pattern: NUMBER_REGEX.INT },
+              { label: "Revenue", code: "REVENUE", pattern: NUMBER_REGEX.FLOAT },
+              { label: "Rooms", code: "ROOMS", pattern: NUMBER_REGEX.INT },
             ]}
             rows={outlookMonths.map((month, i) => ({ label: month, code: i }))}
             flipName
-            prefix="Outlook"
+            prefix="OUTLOOK"
           />
         </FetchingElement>
         <FetchingElement

@@ -26,7 +26,7 @@ app.use("/api/hotel", hotelRouter);
 
 app.get("/logo", (req, res) => {
   readdir("./server/assets/logo")
-    .then(x => res.status(200).send(x))
+    .then(x => res.send(x))
     .catch(e => {
       console.error(e);
       res.sendStatus(500);

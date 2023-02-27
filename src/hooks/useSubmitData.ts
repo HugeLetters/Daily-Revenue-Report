@@ -4,7 +4,7 @@ import { useSelector } from "./reduxHooks";
 export default function useSubmitData({ endpoint, method = "POST" }) {
   if ({ GET: true, HEAD: true }[method])
     throw "Please use another webhook for GET queries\nThis webhook is for POST type of requests";
-  const date = useSelector(state => state.date.value);
+  const date = useSelector(state => state.date);
   return useMutation({
     mutationFn: (data: FormData): Promise<any> => {
       if (!endpoint) throw `No endpoint specified\nContact your IT manager to fix the issue`;

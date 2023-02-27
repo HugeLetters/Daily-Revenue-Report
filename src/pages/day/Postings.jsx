@@ -29,11 +29,11 @@ export default function Postings() {
   return (
     <div>
       <h1>Daily Postings Input</h1>
-      <b>In case of duplicate posting codes the latter will take precedence!</b>
+      <b>In case of duplicate posting codes the former will take precedence!</b>
       <br />
       <em>Transaction codes which are not in the database will be discarded</em>
       <Form
-        endpoint="/api/input/day"
+        endpoint="/api/input/day/postings"
         onReset={handleReset}
       >
         <table>

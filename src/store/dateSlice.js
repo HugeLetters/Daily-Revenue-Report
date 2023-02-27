@@ -1,21 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-import flatpickr from "flatpickr";
+import moment from "moment";
 
-const initialState = () => {
-  const date = new Date();
-  const format = "d.m.Y";
-  return { value: flatpickr.formatDate(date.fp_incr(-1), format), format };
-};
+const initialState = () => moment().subtract(1, "d").format("YYYY-MM-DD");
 
 export const dateSlice = createSlice({
   name: "date",
   initialState,
   reducers: {
     set: (state, action) => {
-      if (!action.payload) {
+      if (!action.payload || !moment(action.payload).isValid()) {
         return initialState();
       }
-      state.value = action.payload;
+      return moment(action.payload).format("YYYY-MM-DD");
     },
   },
 });

@@ -9,7 +9,7 @@ export function getFoodserviceOutlets() {
 }
 
 export function getFoodservicePostings() {
-  return prisma.fBpostingType.findMany({ select: { fbgroup: true, name: true } });
+  return prisma.foodserviceType.findMany({ select: { FoodserviceGroup: true, name: true } });
 }
 
 export async function getHotelConfig(name = null) {
