@@ -1,4 +1,4 @@
-import prisma from "./client.js";
+import prisma from "../client.js";
 
 export function getMarketSegments() {
   return prisma.marketSegment.findMany();
