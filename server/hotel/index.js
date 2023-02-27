@@ -4,7 +4,7 @@ import {
   getFoodservicePostings,
   getHotelConfig,
   getMarketSegments,
-} from "../../database/queries.js";
+} from "../../database/read/hotel-data.js";
 const router = express.Router();
 
 router.get("/foodservice-outlets", (req, res) => {

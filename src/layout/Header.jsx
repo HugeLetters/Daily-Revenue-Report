@@ -13,7 +13,7 @@ export default function Header() {
   return (
     <header id={style.header}>
       <img src={`/logo/color.png`} />
-      <div>{date}</div>
+      <div>{date.replace(/(\d{4,})-(\d{2})-(\d{2})/, "$3.$2.$1")}</div>
       <input
         type="date"
         required

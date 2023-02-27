@@ -133,6 +133,7 @@ model DailyData {
   DailyFoodserviceCover         DailyFoodserviceCover[]
   foodserviceCorrectionOpera    Float?                  @map("foodservice-correction-opera")
   foodserviceCorrectionSimphony Float?                  @map("foodservice-correction-simphony")
+  a                             Json[]
   eventsName                    String[]                @map("events-name")
   eventsCompany                 String[]                @map("events-company")
   eventsRoomnights              Int[]                   @map("events-roomnights")
