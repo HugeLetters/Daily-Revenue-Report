@@ -16,6 +16,7 @@ export function upsertDailyInput(data) {
 
   DailyData.date = date;
 
+  ("test");
   console.log(DailyMarketSegment);
   console.log(DailyFoodservice);
   console.log(DailyFoodserviceCover);
