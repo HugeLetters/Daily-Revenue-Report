@@ -19,11 +19,11 @@ export default function Form({ children, endpoint, method = "PUT", onReset }) {
       <button>SUBMIT</button>
       <button type="reset">RESET</button>
       <section>
-        <div>Data submit status: {submit.status}</div>
-        {submit.isIdle && <div>Press the submit button to send your input</div>}
+        <p>Data submit status: {submit.status}</p>
+        {submit.isIdle && <p>Press the submit button to send your input</p>}
         {submit.isLoading && <Loading text="Uploading to the server" />}
-        {submit.isError && <div>Error message: {submit.error}</div>}
-        {submit.isSuccess && <div>Server response: {submit.data}</div>}
+        {submit.isError && <p>Error message: {submit.error}</p>}
+        {submit.isSuccess && <p>Server response: {submit.data}</p>}
       </section>
     </form>
   );

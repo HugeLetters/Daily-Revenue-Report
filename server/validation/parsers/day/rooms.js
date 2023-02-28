@@ -6,7 +6,7 @@ export function parseDayliRoomsInput(data) {
       return obj;
     },
     {
-      DailyMarketSegment: {},
+      DailyMarketSegment: new Map(),
       nextMonthsOutlookRooms: [],
       nextMonthsOutlookRevenue: [],
       onTheBooksOccupancy: [],
@@ -22,35 +22,35 @@ const parserMap = new Map([
   ["PACKAGE_LEDGER", (obj, v) => (obj["packageLedger"] = v)],
   [
     "PAST_DAY_ROOMS",
-    (obj, v, segment) => {
-      obj["DailyMarketSegment"][segment]
-        ? (obj["DailyMarketSegment"][segment]["pastDayRooms"] = v)
-        : (obj["DailyMarketSegment"][segment] = { pastDayRooms: v });
-    },
+    (obj, v, segment) =>
+      obj["DailyMarketSegment"].set(segment, {
+        pastDayRoom: v,
+        ...obj["DailyMarketSegment"].get(segment),
+      }),
   ],
   [
     "PAST_DAY_REVENUE",
-    (obj, v, segment) => {
-      obj["DailyMarketSegment"][segment]
-        ? (obj["DailyMarketSegment"][segment]["pastDayRevenue"] = v)
-        : (obj["DailyMarketSegment"][segment] = { pastDayRevenue: v });
-    },
+    (obj, v, segment) =>
+      obj["DailyMarketSegment"].set(segment, {
+        pastDayRevenue: v,
+        ...obj["DailyMarketSegment"].get(segment),
+      }),
   ],
   [
     "REST_OF_MONTH_ROOMS",
-    (obj, v, segment) => {
-      obj["DailyMarketSegment"][segment]
-        ? (obj["DailyMarketSegment"][segment]["restOfMonthRooms"] = v)
-        : (obj["DailyMarketSegment"][segment] = { restOfMonthRooms: v });
-    },
+    (obj, v, segment) =>
+      obj["DailyMarketSegment"].set(segment, {
+        restOfMonthRoom: v,
+        ...obj["DailyMarketSegment"].get(segment),
+      }),
   ],
   [
     "REST_OF_MONTH_REVENUE",
-    (obj, v, segment) => {
-      obj["DailyMarketSegment"][segment]
-        ? (obj["DailyMarketSegment"][segment]["restOfMonthRevenue"] = v)
-        : (obj["DailyMarketSegment"][segment] = { restOfMonthRevenue: v });
-    },
+    (obj, v, segment) =>
+      obj["DailyMarketSegment"].set(segment, {
+        restOfMonthRevenue: v,
+        ...obj["DailyMarketSegment"].get(segment),
+      }),
   ],
   ["TOTAL_REVENUE", (obj, v) => (obj["totalRevenue"] = v)],
   ["COMP_HOUSE_ROOMS", (obj, v) => (obj["compHouseRooms"] = v)],

@@ -133,16 +133,24 @@ model DailyData {
   DailyFoodserviceCover         DailyFoodserviceCover[]
   foodserviceCorrectionOpera    Float?                  @map("foodservice-correction-opera")
   foodserviceCorrectionSimphony Float?                  @map("foodservice-correction-simphony")
-  a                             Json[]
-  eventsName                    String[]                @map("events-name")
-  eventsCompany                 String[]                @map("events-company")
-  eventsRoomnights              Int[]                   @map("events-roomnights")
-  eventsCheckIn                 DateTime[]              @map("events-check-in") @db.Date
-  eventsCheckOut                DateTime[]              @map("events-check-out") @db.Date
-  eventsStatus                  String[]                @map("events-status")
+  DailyEvent                    DailyEvent[]
   DailyPosting                  DailyPosting[]
 
   @@map("daily-data")
+}
+
+model DailyEvent {
+  date       DateTime  @db.Date
+  DailyData  DailyData @relation(fields: [date], references: [date], onDelete: Cascade)
+  name       String
+  company    String
+  roomnights Int
+  checkin    DateTime  @map("check-in") @db.Date
+  checkout   DateTime  @map("check-out") @db.Date
+  status     String
+
+  @@id(name: "id", fields: [date, name])
+  @@map("daily-events")
 }
 
 model DailyPosting {
@@ -185,9 +193,9 @@ model DailyMarketSegment {
   DailyData          DailyData     @relation(fields: [date], references: [date], onDelete: Cascade)
   segment            String        @db.Char(1)
   MarketSegment      MarketSegment @relation(fields: [segment], references: [code])
-  pastDayRooms       Int?          @map("past-day-rooms")
+  pastDayRoom        Int?          @map("past-day-rooms")
   pastDayRevenue     Float?        @map("past-day-revenue")
-  restOfMonthRooms   Int?          @map("rest-of-month-rooms")
+  restOfMonthRoom    Int?          @map("rest-of-month-rooms")
   restOfMonthRevenue Float?        @map("rest-of-month-revenue")
 
   @@id(name: "id", fields: [date, segment])

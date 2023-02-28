@@ -12,13 +12,13 @@ export const dailyInputSchema = z
     ARLedger: zFloat,
     depositLedger: zFloat,
     packageLedger: zFloat,
-    DailyMarketSegment: z.record(
+    DailyMarketSegment: z.map(
       z.string().length(1),
       z
         .object({
-          pastDayRooms: zInt,
+          pastDayRoom: zInt,
           pastDayRevenue: zFloat,
-          restOfMonthRooms: zInt,
+          restOfMonthRoom: zInt,
           restOfMonthRevenue: zFloat,
         })
         .partial()
@@ -52,12 +52,18 @@ export const dailyInputSchema = z
     DailyFoodserviceCover: z.array(z.object({ outlet: z.string().max(50), value: zInt })).max(50),
     foodserviceCorrectionOpera: zFloat,
     foodserviceCorrectionSimphony: zFloat,
-    eventsName: z.array(z.string().max(200)).max(100),
-    eventsCompany: z.array(z.string().max(200)).max(100),
-    eventsRoomnights: z.array(zInt).max(100),
-    eventsCheckIn: z.array(z.coerce.date()).max(100),
-    eventsCheckOut: z.array(z.coerce.date()).max(100),
-    eventsStatus: z.array(z.string().max(200)).max(100),
+    DailyEvent: z
+      .array(
+        z.object({
+          name: z.string().max(200),
+          company: z.string().max(200),
+          roomnights: zInt,
+          checkin: z.coerce.date(),
+          checkout: z.coerce.date(),
+          status: z.string().max(200),
+        })
+      )
+      .max(100),
     DailyPosting: z.array(z.object({ code: zInt.gte(0).lte(9999), value: zFloat })).max(10000),
   })
   .partial()

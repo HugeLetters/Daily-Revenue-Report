@@ -12,26 +12,57 @@ export function parseDayliFoodserviceInput(data) {
       return obj;
     },
     {
-      eventsName: [],
-      eventsCompany: [],
-      eventsRoomnights: [],
-      eventsCheckIn: [],
-      eventsCheckOut: [],
-      eventsStatus: [],
       DailyFoodservice: [],
       DailyFoodserviceCover: [],
+      DailyEvent: [],
     }
   );
 }
 
 const parserMap = new Map([
   ["date", (obj, v) => (obj["date"] = v)],
-  ["EVENTS_NAME", (obj, v, arg) => (obj["eventsName"][arg] = v)],
-  ["EVENTS_COMPANY", (obj, v, arg) => (obj["eventsCompany"][arg] = v)],
-  ["EVENTS_ROOM_NIGHTS", (obj, v, arg) => (obj["eventsRoomnights"][arg] = v)],
-  ["EVENTS_CHECK_IN", (obj, v, arg) => (obj["eventsCheckIn"][arg] = v)],
-  ["EVENTS_CHECK_OUT", (obj, v, arg) => (obj["eventsCheckOut"][arg] = v)],
-  ["EVENTS_STATUS", (obj, v, arg) => (obj["eventsStatus"][arg] = v)],
+  [
+    "EVENTS_NAME",
+    (obj, v, arg) =>
+      obj["DailyEvent"][arg]
+        ? (obj["DailyEvent"][arg].name = v)
+        : (obj["DailyEvent"][arg] = { name: v }),
+  ],
+  [
+    "EVENTS_COMPANY",
+    (obj, v, arg) =>
+      obj["DailyEvent"][arg]
+        ? (obj["DailyEvent"][arg].company = v)
+        : (obj["DailyEvent"][arg] = { company: v }),
+  ],
+  [
+    "EVENTS_ROOM_NIGHTS",
+    (obj, v, arg) =>
+      obj["DailyEvent"][arg]
+        ? (obj["DailyEvent"][arg].roomnights = v)
+        : (obj["DailyEvent"][arg] = { roomnights: v }),
+  ],
+  [
+    "EVENTS_CHECK_IN",
+    (obj, v, arg) =>
+      obj["DailyEvent"][arg]
+        ? (obj["DailyEvent"][arg].checkin = v)
+        : (obj["DailyEvent"][arg] = { checkin: v }),
+  ],
+  [
+    "EVENTS_CHECK_OUT",
+    (obj, v, arg) =>
+      obj["DailyEvent"][arg]
+        ? (obj["DailyEvent"][arg].checkout = v)
+        : (obj["DailyEvent"][arg] = { checkout: v }),
+  ],
+  [
+    "EVENTS_STATUS",
+    (obj, v, arg) =>
+      obj["DailyEvent"][arg]
+        ? (obj["DailyEvent"][arg].status = v)
+        : (obj["DailyEvent"][arg] = { status: v }),
+  ],
   [
     "FOODSERVICE_CORRECTION",
     (obj, v, arg) =>

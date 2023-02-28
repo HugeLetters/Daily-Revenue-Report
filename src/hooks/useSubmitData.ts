@@ -9,7 +9,7 @@ export default function useSubmitData({ endpoint, method = "POST" }) {
     mutationFn: (data: FormData): Promise<any> => {
       if (!endpoint) throw `No endpoint specified\nContact your IT manager to fix the issue`;
       // TODO remove sendAll, should only send non-empty values
-      const sendAll = true;
+      const sendAll = false;
       const body = sendAll ? data : new FormData();
       for (const [k, v] of data) {
         if (sendAll) break;

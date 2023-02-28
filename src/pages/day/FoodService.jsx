@@ -113,8 +113,10 @@ export default function Foodservice() {
               ))}
             </tbody>
           </table>
+          <p>Events should have a unique name.</p>
+          <p>In case of duplicates the former will take precedence!</p>
           {eventsLimit.isSuccess && events.length - 1 > eventsLimit.data.value && (
-            <section>Only the first {eventsLimit.data.value} events are accepted</section>
+            <p>Only the first {eventsLimit.data.value} events are accepted</p>
           )}
         </fieldset>
       </Form>
